@@ -86,4 +86,16 @@ void main() {
       expect(e.toString(), contains('negative numbers not allowed -2'));
     }
   });
+
+  test('should handle numbers exactly or below 1000', () {
+    expect(StringCalculator().add('1,1000,2'), 1003);
+  });
+
+  test('should ignore numbers bigger than 1000', () {
+    expect(StringCalculator().add('2,1001'), 2);
+  });
+
+  test('should ignore numbers bigger than 1000 with custom delimiter', () {
+    expect(StringCalculator().add('//;\n1;1000;2;2000;3;10001'), 1006);
+  });
 }

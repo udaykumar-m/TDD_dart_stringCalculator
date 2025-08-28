@@ -33,7 +33,7 @@ class StringCalculator {
       int num = int.parse(numStr);
       if (num < 0) {
         negatives.add(num);
-      } else {
+      } else if (num <= 1000) {
         validNumbers.add(num);
       }
     }
