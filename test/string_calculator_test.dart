@@ -18,12 +18,9 @@ void main() {
     expect(StringCalculator().add('1,2,3,4,5,6'), 21);
   });
 
-  test(
-    'calculator should handle newlines instead of commas between numbers',
-    () {
-      expect(StringCalculator().add('1\n2\n3'), 6);
-    },
-  );
+  test('calculator should handle newlines instead of commas', () {
+    expect(StringCalculator().add('1\n2\n3'), 6);
+  });
 
   test('calculator should handle commas and newlines', () {
     expect(StringCalculator().add('1,2\n3,4'), 10);
@@ -35,5 +32,33 @@ void main() {
 
   test('calculator should handle multiple newlines and commas', () {
     expect(StringCalculator().add('1,2,\n,,,,,\n\n\n\n,3,4'), 10);
+  });
+
+  test('should handle custom delimiter with semicolon', () {
+    expect(StringCalculator().add('//;\n1;2'), 3);
+  });
+
+  test('should handle custom delimiter', () {
+    expect(StringCalculator().add('//*\n1*2*3'), 6);
+  });
+
+  test('should handle custom delimiter with multiple characters', () {
+    expect(StringCalculator().add('//*;\n1;2;3'), 6);
+  });
+
+  test('should handle custom delimiter with multiple characters', () {
+    expect(StringCalculator().add('//*;\n1;2*3'), 6);
+  });
+
+  test('should handle custom delimiter with no newline', () {
+    expect(StringCalculator().add('//;1;2;3'), 0); //will print error message
+  });
+
+  test('should handle // with no delimiter', () {
+    expect(StringCalculator().add('//\n123'), 123); //will print error message
+  });
+
+  test('should handle // with default delimiter', () {
+    expect(StringCalculator().add('//\n1,2,3'), 6); //will print error message
   });
 }
