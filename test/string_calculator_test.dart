@@ -55,7 +55,7 @@ void main() {
   });
 
   test('should handle // with no delimiter', () {
-    expect(StringCalculator().add('//\n123'), 123); //will print error message
+    expect(StringCalculator().add('//\n123'), 123);
   });
 
   test('should handle // with default delimiter', () {
@@ -113,5 +113,29 @@ void main() {
 
   test('should handle custom delimiter [] with default delimiter', () {
     expect(StringCalculator().add('//[]\n1,2,3'), 6);
+  });
+
+  test('should handle multi-character delimiter with special characters', () {
+    expect(StringCalculator().add('//[**]\n1**2**3'), 6);
+  });
+
+  test('should handle multiple single-character delimiters', () {
+    expect(StringCalculator().add('//[*][%]\n1*2%3'), 6);
+  });
+
+  test('should handle multiple multi-character delimiters', () {
+    expect(StringCalculator().add('//[***][%%%]\n1***2%%%3'), 6);
+  });
+
+  test('should handle mixed single and multi-character delimiters', () {
+    expect(StringCalculator().add('//[@][%%]\n1@2%%3'), 6);
+  });
+
+  test('should handle custom delimiter and [] multiple delimiters', () {
+    expect(StringCalculator().add('//[][*%]\n123'), 123);
+  });
+
+  test('should handle multiple empty delimiters', () {
+    expect(StringCalculator().add('//[][]\n123'), 123);
   });
 }

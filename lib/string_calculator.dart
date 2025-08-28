@@ -4,7 +4,7 @@ class StringCalculator {
       return 0;
     }
 
-    String delimiter = ',';
+    List<String> delimiters = [','];
     bool hasCustomDelimiter = false;
     bool isBracketFormat = false;
 
@@ -13,15 +13,16 @@ class StringCalculator {
       if (delimiterEnd != -1) {
         String delimiterPart = numbers.substring(2, delimiterEnd);
 
-        if (delimiterPart.startsWith('[') && delimiterPart.endsWith(']')) {
-          delimiter = delimiterPart.substring(1, delimiterPart.length - 1);
+        if (delimiterPart.startsWith('[')) {
+          delimiters = _parseBracketDelimiters(delimiterPart);
           isBracketFormat = true;
         } else {
-          delimiter = delimiterPart;
+          delimiters = [delimiterPart];
         }
 
         numbers = numbers.substring(delimiterEnd + 1);
-        hasCustomDelimiter = delimiter.isNotEmpty;
+        hasCustomDelimiter =
+            delimiters.isNotEmpty && delimiters.any((d) => d.isNotEmpty);
       } else {
         print(
           'The String should start with // and have a \\n after the delimiter',
@@ -33,9 +34,12 @@ class StringCalculator {
     final RegExp splitPattern;
     if (hasCustomDelimiter) {
       if (isBracketFormat) {
-        splitPattern = RegExp('${RegExp.escape(delimiter)}');
+        String pattern = delimiters.map((d) => RegExp.escape(d)).join('|');
+        print('DEBUG: Pattern: $pattern');
+        splitPattern = RegExp('$pattern');
       } else {
-        splitPattern = RegExp('[$delimiter\n]');
+        String allChars = delimiters.join('');
+        splitPattern = RegExp('[$allChars\n]');
       }
     } else {
       splitPattern = RegExp(r'[,\n]');
@@ -63,5 +67,29 @@ class StringCalculator {
     }
 
     return sum;
+  }
+
+  List<String> _parseBracketDelimiters(String delimiterPart) {
+    List<String> delimiters = [];
+    int start = 0;
+
+    while (start < delimiterPart.length) {
+      if (delimiterPart[start] == '[') {
+        int end = delimiterPart.indexOf(']', start);
+        if (end != -1) {
+          String delimiter = delimiterPart.substring(start + 1, end);
+          start = end + 1;
+          if (delimiter.isEmpty) {
+            continue;
+          }
+          delimiters.add(delimiter);
+        } else {
+          print('DEBUG: No closing bracket found');
+          return [];
+        }
+      }
+    }
+
+    return delimiters;
   }
 }
