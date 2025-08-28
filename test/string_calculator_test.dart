@@ -98,4 +98,20 @@ void main() {
   test('should ignore numbers bigger than 1000 with custom delimiter', () {
     expect(StringCalculator().add('//;\n1;1000;2;2000;3;10001'), 1006);
   });
+
+  test('should handle custom delimiter [] of any length', () {
+    expect(StringCalculator().add('//[***]\n1***2***3'), 6);
+  });
+
+  test('should handle custom delimiter [] with no length', () {
+    expect(StringCalculator().add('//[]\n123'), 123);
+  });
+
+  test('should handle custom delimiter [] with no newline character', () {
+    expect(StringCalculator().add('//[;%]1;2;3'), 0); //will print error message
+  });
+
+  test('should handle custom delimiter [] with default delimiter', () {
+    expect(StringCalculator().add('//[]\n1,2,3'), 6);
+  });
 }

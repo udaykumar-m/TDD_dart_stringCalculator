@@ -6,11 +6,20 @@ class StringCalculator {
 
     String delimiter = ',';
     bool hasCustomDelimiter = false;
+    bool isBracketFormat = false;
 
     if (numbers.startsWith('//')) {
       final delimiterEnd = numbers.indexOf('\n');
       if (delimiterEnd != -1) {
-        delimiter = numbers.substring(2, delimiterEnd);
+        String delimiterPart = numbers.substring(2, delimiterEnd);
+
+        if (delimiterPart.startsWith('[') && delimiterPart.endsWith(']')) {
+          delimiter = delimiterPart.substring(1, delimiterPart.length - 1);
+          isBracketFormat = true;
+        } else {
+          delimiter = delimiterPart;
+        }
+
         numbers = numbers.substring(delimiterEnd + 1);
         hasCustomDelimiter = delimiter.isNotEmpty;
       } else {
@@ -21,20 +30,31 @@ class StringCalculator {
       }
     }
 
+    final RegExp splitPattern;
+    if (hasCustomDelimiter) {
+      if (isBracketFormat) {
+        splitPattern = RegExp('${RegExp.escape(delimiter)}');
+      } else {
+        splitPattern = RegExp('[$delimiter\n]');
+      }
+    } else {
+      splitPattern = RegExp(r'[,\n]');
+    }
+
     final numberString = numbers
-        .split(hasCustomDelimiter ? RegExp('[$delimiter\n]') : RegExp(r'[,\n]'))
+        .split(splitPattern)
         .where((s) => s.isNotEmpty)
         .toList();
 
+    int sum = 0;
     List<int> negatives = [];
-    List<int> validNumbers = [];
 
-    for (String numStr in numberString) {
-      int num = int.parse(numStr);
+    for (final numStr in numberString) {
+      final num = int.parse(numStr);
       if (num < 0) {
         negatives.add(num);
       } else if (num <= 1000) {
-        validNumbers.add(num);
+        sum += num;
       }
     }
 
@@ -42,6 +62,6 @@ class StringCalculator {
       throw Exception('negative numbers not allowed ${negatives.join(', ')}');
     }
 
-    return validNumbers.isEmpty ? 0 : validNumbers.reduce((a, b) => a + b);
+    return sum;
   }
 }
