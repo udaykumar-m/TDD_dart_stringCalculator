@@ -61,4 +61,29 @@ void main() {
   test('should handle // with default delimiter', () {
     expect(StringCalculator().add('//\n1,2,3'), 6); //will print error message
   });
+
+  test('should throw exception for negative numbers', () {
+    expect(
+      () => StringCalculator().add('1,-2,3,-4,5,-6'),
+      throwsA(isA<Exception>()),
+    );
+  });
+
+  test('should throw exception with the negative numbers in the message', () {
+    try {
+      StringCalculator().add('1,-2,3,-4,5,-6');
+      fail('Expected exception to be thrown');
+    } catch (e) {
+      expect(e.toString(), contains('negative numbers not allowed -2, -4, -6'));
+    }
+  });
+
+  test('should throw exception for negative numbers with custom delimiter', () {
+    try {
+      StringCalculator().add('//;\n1;-2;3');
+      fail('Expected exception to be thrown');
+    } catch (e) {
+      expect(e.toString(), contains('negative numbers not allowed -2'));
+    }
+  });
 }

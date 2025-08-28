@@ -26,8 +26,22 @@ class StringCalculator {
         .where((s) => s.isNotEmpty)
         .toList();
 
-    return numberString.isEmpty
-        ? 0
-        : numberString.map(int.parse).reduce((a, b) => a + b);
+    List<int> negatives = [];
+    List<int> validNumbers = [];
+
+    for (String numStr in numberString) {
+      int num = int.parse(numStr);
+      if (num < 0) {
+        negatives.add(num);
+      } else {
+        validNumbers.add(num);
+      }
+    }
+
+    if (negatives.isNotEmpty) {
+      throw Exception('negative numbers not allowed ${negatives.join(', ')}');
+    }
+
+    return validNumbers.isEmpty ? 0 : validNumbers.reduce((a, b) => a + b);
   }
 }

@@ -6,7 +6,7 @@ void main(List<String> arguments) {
 
   print('String Calculator');
   print('================');
-  print('Enter numbers separated by commas (e.g., "1,2,3") or "quit" to exit');
+  print('Enter numbers or type "quit" to exit');
 
   while (true) {
     stdout.write('Enter numbers: ');
