@@ -42,7 +42,7 @@ void main() {
   });
 
   test('should handle custom delimiter', () {
-    expect(StringCalculator().add('//*\n1*2*3'), 6);
+    expect(StringCalculator().add('//*\n2*2*3'), 12);
   });
 
   test('should handle custom delimiter with multiple characters', () {
