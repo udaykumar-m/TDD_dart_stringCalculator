@@ -7,7 +7,7 @@ class StringCalculator {
     List<String> delimiters = [','];
     bool hasCustomDelimiter = false;
     bool isBracketFormat = false;
-    bool multiply = false;
+    String singleDelimiter = '';
 
     if (numbers.startsWith('//')) {
       final delimiterEnd = numbers.indexOf('\n');
@@ -18,7 +18,7 @@ class StringCalculator {
           delimiters = _parseBracketDelimiters(delimiterPart);
           isBracketFormat = true;
         } else {
-          multiply = (delimiterPart == '*');
+          singleDelimiter = delimiterPart;
           delimiters = [delimiterPart];
         }
 
@@ -50,9 +50,20 @@ class StringCalculator {
     final numberString = numbers
         .split(splitPattern)
         .where((s) => s.isNotEmpty)
+        .where((s) {
+          if (singleDelimiter == 'o') {
+            if (int.parse(s) % 2 != 0) {
+              return true;
+            } else {
+              return false;
+            }
+          }
+          return true;
+        })
         .toList();
+    print(numberString);
 
-    int result = multiply ? 1 : 0;
+    int result = singleDelimiter == '*' ? 1 : 0;
 
     List<int> negatives = [];
 
@@ -61,7 +72,7 @@ class StringCalculator {
       if (num < 0) {
         negatives.add(num);
       } else if (num <= 1000) {
-        if (multiply) {
+        if (singleDelimiter == '*') {
           result *= num;
         } else {
           result += num;

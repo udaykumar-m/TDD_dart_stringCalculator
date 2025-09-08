@@ -45,6 +45,10 @@ void main() {
     expect(StringCalculator().add('//*\n2*2*3'), 12);
   });
 
+  test('should handle custom delimiter o to add odd numbers', () {
+    expect(StringCalculator().add('//o\n2o5o3o4'), 8);
+  });
+
   test('should handle custom delimiter with multiple characters', () {
     expect(StringCalculator().add('//*;\n1;2;3'), 6);
   });
